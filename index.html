@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<!-- BT3 -->
+
+<body>
+    <div>
+        <input type="number" id="number" placeholder="Số" min="1" max="100">>
+        <button onclick="Random()">Random</button>
+        <div id="result"></div>
+
+    </div>
+</body>
+<script>
+    function Random() {
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+        console.log(randomNumber)
+        let guess = parseInt(document.getElementById("number").value);
+        if (guess === randomNumber) {
+            document.getElementById("result").innerText = "Bạn đã thắng";
+        } else {
+            document.getElementById("result").innerText = "Bạn thua";
+        }
+    }
+</script>
+
+<!-- BT2 -->
+<!--
+<script>
+    function logIn() {
+        let text = document.getElementById("password").value;
+        let mail = document.getElementById("email").value;
+        let checkText = (text.length >= 8 && mail.toString().indexOf("@") !== -1) ? alert`Đăng nhập thành công` : alert`Thông tin đăng nhập không hợp lệ (email phải có @, password phải có ít nhất 8 ký tự)`;
+    }
+</script>
+<body>
+    <div>
+        <input type="email" id="email" name="email">
+        <input type="password" id="password" name="password">
+        <button onclick="logIn()">Log in</button>
+    </div>
+</body>
+-->
+
+<!--BT1-->
+<!--
+<body>
+    <div>
+        <input id="numberInput">
+        <button onclick="Number()">OK</button>
+        <div id="resultNumber" class="result"></div>
+        <div id="historyResult" class="history"></div>
+        <div id="arrSum"></div>
+    </div>
+
+</body>
+<script>
+    let historyNumbers = []
+    function Number() {
+
+        let input = document.getElementById("numberInput");
+        let num = parseInt(input.value)
+
+
+        if (isNaN(num)) {
+            document.getElementById("resultNumber").innerText = `${input.value} không phải số`
+            return
+        }
+
+        let checkNum = (num !== "" && num % 2 == 0) ? `${num} là số chẵn` : `${num} là số lẻ`
+        document.getElementById("resultNumber").innerText = checkNum
+        historyNumbers.push(num)
+        historyNumbers.join(" ,")
+        document.getElementById("historyResult").innerText = `Dãy số đã nhập : ${historyNumbers}`
+
+        // arrSum
+        input.value = ""
+        function Sum(total, num) {
+            return total + num;
+        }
+        var sum = historyNumbers.reduce(Sum, 0);
+        console.log(sum);
+
+        document.getElementById("resultNumber").innerText = "Tổng các số là: " + sum;
+    }
+</script> -->
+
+</html>
