@@ -27,20 +27,19 @@
 <script>
     var s = null;
     function start() {
-        if (s === null) {
-            s = parseInt(document.getElementById('second').value);
-        }
-
-        if (isNaN(s) || s < 0 || s >= 60 ) {
-                alert('Vui lòng nhập giá trị hợp lệ');
-                return false;
-            }
-        
-        if (s == -1) {
+        if (s == 0) {
             clearTimeout(timeout);
             alert('Hết giờ');
             return false;
         }
+        if (s === null) {
+            s = parseInt(document.getElementById('second').value);
+        }
+
+        if (isNaN(s) || s < 0 ) {
+                alert('Vui lòng nhập giá trị hợp lệ');
+                return false;
+            }
         document.getElementById('s').innerText = s.toString();
         timeout = setTimeout(function () {
             s--;
