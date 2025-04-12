@@ -1,4 +1,116 @@
 <!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        input {
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        #progress-container {
+            width: 100%;
+            background-color: #ccc;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        #progress-bar {
+            height: 30px;
+            width: 0%;
+            background-color: green;
+            border-radius: 5px;
+        }
+
+        #notification {
+            margin-top: 15px;
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🕒 Hẹn giờ báo thức</h1>
+    <input type="number" id="minutes" placeholder="Phút" min="0">
+    <input type="number" id="seconds" placeholder="Giây" min="0" max="59">
+    <button onclick="start()">Bắt đầu</button>
+    <button onclick="cancel()">Hủy</button>
+    <div id="countdownDisplay" style="margin-top: 10px; font-size: 20px; color: blue;"></div>
+
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+
+    <audio id="alarmSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+
+    <script>
+        let totalSeconds;
+        let timeout;
+        let currentSecond = 0;
+        let currentMinute = 0;
+
+        function start() {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            const secondValue = document.getElementById("seconds").value;
+            currentSecond = parseInt(secondValue);
+            const minuteValue = document.getElementById("minutes").value;
+            currentMinute = parseInt(minuteValue);
+            if (isNaN(currentSecond) || currentSecond < 0 || isNaN(currentMinute) || currentMinute < 0) {
+                alert("Vui lòng nhập giá trị hợp lệ");
+                currentSecond = 0;
+                currentMinute = 0
+                return;
+            }
+            runCountdown();
+        }
+        function runCountdown() {
+            const display = document.getElementById("countdownDisplay");
+            display.textContent = currentMinute + "phút" + ":" + currentSecond + " giây";
+            if (currentMinute === 0 && currentSecond === 0) {
+                document.getElementById('alarmSound').play();
+                alert("Đến giờ rồi!");
+                return;
+            }
+            if (currentSecond === 0) {
+                if (currentMinute > 0) {
+                    currentMinute--;
+                    currentSecond = 59;
+                }
+            } else {
+                currentSecond--;
+            }
+            timeout = setTimeout(runCountdown, 1000);
+            totalSeconds = min * 60 + sec;
+        }
+        function cancel() {
+            clearTimeout(timeout);
+            timeout = false;
+            currentSecond = 0;
+            currentMinute = 0;
+            document.getElementById("countdownDisplay").textContent = currentMinute + "phút" + ":" + currentSecond + " giây";
+        }
+    </script>
+
+</body>
+
+</html>
+
+<!--
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,6 +119,103 @@
     <title>Document</title>
 </head>
 
+<body>
+    <div>
+        <div>
+            <span id="s">Giây</span> :
+            <span id="m">Phút</span>;
+        </div>
+    </div>
+
+    <div>
+        <strong> Nhập thông tin ban đầu: <br /> </strong>
+        <input type="text" id="minute" placeholder="Phút" value="" />
+        <input type="text" id="second" placeholder="Giây" value="" />
+        <input type="button" value="Start" onclick="start()" />
+        <input type="button" value="Pause" onclick="pause()" />
+        <input type="button" value="Reset" onclick="reset()" />
+    </div>
+
+    <div id="countdownDisplay" style="margin-top: 10px; font-size: 20px; color: blue;"></div>
+    <div id="clock" class="clock" style="margin-top: 10px; font-size: 18px;"></div>
+
+    <script>
+        let timeout;
+        let currentSecond = 0;
+        let currentMinute = 0;
+
+        function start() {
+            // Lấy giá trị đầu vào nếu lần đầu hoặc đang reset
+            if (timeout) {
+                clearTimeout(timeout); // Dừng đếm trước đó nếu bấm Start nhiều lần
+            }
+            const secondValue = document.getElementById("second").value;
+            currentSecond = parseInt(secondValue);
+            const minuteValue = document.getElementById("minute").value;
+            currentMinute = parseInt(minuteValue);
+            if (isNaN(currentSecond) || currentSecond < 0 || isNaN(currentMinute) || currentMinute < 0) {
+                alert("Vui lòng nhập giá trị hợp lệ");
+                currentSecond = 0;
+                currentMinute = 0
+                return;
+            }
+
+            runCountdown(); // Bắt đầu đếm
+        }
+        function pause() {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = false;
+            } else {
+                runCountdown();
+            }
+        }
+
+        function reset() {
+            clearTimeout(timeout);
+            timeout = false;
+            currentSecond = 0;
+            currentMinute = 0;
+            document.getElementById("countdownDisplay").textContent = currentMinute + "phút" + ":" + currentSecond + " giây";
+        }
+
+        function runCountdown() {
+            const display = document.getElementById("countdownDisplay");
+            display.textContent = currentMinute + "phút" + ":" + currentSecond + " giây";
+
+            if (currentMinute === 0 && currentSecond === 0) {
+                alert("Đã hết thời gian!");
+                return;
+            }
+
+            if (currentSecond === 0) {
+                if (currentMinute > 0) {
+                    currentMinute--;
+                    currentSecond = 59;
+                }
+            } else {
+                currentSecond--;
+            }
+            timeout = setTimeout(runCountdown, 1000);
+        }
+
+        // Hiển thị đồng hồ thời gian thực
+        function Clock() {
+            const clockElement = document.getElementById("clock");
+            const currentTime = new Date();
+            const hours = currentTime.getHours().toString().padStart(2, "0");
+            const minutes = currentTime.getMinutes().toString().padStart(2, "0");
+            const seconds = currentTime.getSeconds().toString().padStart(2, "0");
+            clockElement.textContent = `🕒 Bây giờ là: ${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(Clock, 1000);
+        Clock();
+    </script>
+</body>
+-->
+<!-- BT4 -->
+<!--
 <body>
 
     <div>
@@ -26,14 +235,15 @@
 </body>
 <script>
     var s = null;
+    var timeout = null;
     function start() {
+        if (s === null) {
+            s = parseInt(document.getElementById('second').value);
+        }
         if (s == 0) {
             clearTimeout(timeout);
             alert('Hết giờ');
             return false;
-        }
-        if (s === null) {
-            s = parseInt(document.getElementById('second').value);
         }
 
         if (isNaN(s) || s < 0 ) {
@@ -59,7 +269,7 @@
     Clock();
 
 </script>
-
+-->
 <!-- BT3 -->
 <!--
 <body>
@@ -68,6 +278,9 @@
         <button onclick="Random()">Random</button>
         <div id="result"></div>
 
+    </div>
+    <div>
+        <span id="resultRandom">Kết quả</span>
     </div>
 </body>
 <script>
@@ -80,6 +293,7 @@
         } else {
             document.getElementById("result").innerText = "Bạn thua";
         }
+        document.getElementById('resultRandom').innerText = randomNumber.toString();
     }
 </script>
 -->
