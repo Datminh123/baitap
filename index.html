@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -55,7 +56,7 @@
 
     <script>
         const mang = [];
-        function start(name, minutes, seconds) {
+        function start() {
             const totalSeconds = minutes * 60 + seconds;
             const newTimer = {
                 name,
@@ -64,10 +65,10 @@
                 status: 'Đang đếm',
             };
             mang.push(newTimer);
-            return newTimer;
+            startTimer(newTimer);
         }
 
-        function createTimer(name, minutes, seconds) {
+        function createTimer() {
             const name = document.getElementById("timer-name").value;
             const mins = parseInt(document.getElementById("minutes").value);
             const secs = parseInt(document.getElementById("seconds").value);
@@ -75,8 +76,6 @@
                 alert("Vui lòng nhập thời gian hợp lệ.");
                 return;
             }
-            const newTimer = start(name, minutes, seconds);
-            startTimer(newTimer);
         }
 
         function startTimer(Timer) {
