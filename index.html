@@ -3,6 +3,105 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        input {
+            width: 80px;
+            margin-right: 10px;
+            padding: 5px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #ccc;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            width: 0%;
+            background-color: green;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+
+        .status {
+            margin-top: 5px;
+            font-weight: bold;
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>🕒 Tạo Bộ Đếm</h2>
+    <input type="text" id="timer-name" placeholder="Tên timer">
+    <input type="number" id="minutes" placeholder="Phút" min="0">
+    <input type="number" id="seconds" placeholder="Giây" min="0" max="59">
+    <button onclick="createTimer()">Tạo Timer</button>
+
+    <div id="timers-container"></div>
+
+    <audio id="alarmSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+
+    <script>
+        const mang = [];
+        function start(name, minutes, seconds) {
+            const totalSeconds = minutes * 60 + seconds;
+            const newTimer = {
+                name,
+                totalSeconds,
+                remainingSeconds: totalSeconds,
+                status: 'Đang đếm',
+            };
+            mang.push(newTimer);
+            return newTimer;
+        }
+
+        function createTimer(name, minutes, seconds) {
+            const name = document.getElementById("timer-name").value;
+            const mins = parseInt(document.getElementById("minutes").value);
+            const secs = parseInt(document.getElementById("seconds").value);
+            if (isNaN(minutes) || isNaN(seconds) || minutes < 0 || seconds < 0 || seconds > 59) {
+                alert("Vui lòng nhập thời gian hợp lệ.");
+                return;
+            }
+            const newTimer = start(name, minutes, seconds);
+            startTimer(newTimer);
+        }
+
+        function startTimer(Timer) {
+            Timer.timeout = setTimeout(() => {
+                if (Timer.status !== 'Đang đếm') return;
+                if (Timer.remainingSeconds <= 0) {
+                    clearTimeout(Timer.timeout);
+                    Timer.status = 'Đã hết';
+                    document.getElementById('alarmSound').play();
+                    alert(`⏰ ${Timer.name} đã hết giờ!`);
+                    return;
+                }
+                Timer.remainingSeconds--;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
+<!--
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
@@ -26,7 +125,7 @@
 
         #progress-bar {
             height: 30px;
-            width: 0%;
+           
             background-color: green;
             border-radius: 5px;
         }
@@ -38,9 +137,7 @@
         }
     </style>
 </head>
-
 <body>
-
     <h1>🕒 Hẹn giờ báo thức</h1>
     <input type="number" id="minutes" placeholder="Phút" min="0">
     <input type="number" id="seconds" placeholder="Giây" min="0" max="59">
@@ -51,30 +148,26 @@
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
-
-
     <audio id="alarmSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
-
     <script>
         let totalSeconds;
         let timeout;
         let currentSecond = 0;
         let currentMinute = 0;
-
+        const progressBar = document.getElementById('progress-bar');
         function start() {
             if (timeout) {
                 clearTimeout(timeout);
             }
-            const secondValue = document.getElementById("seconds").value;
-            currentSecond = parseInt(secondValue);
-            const minuteValue = document.getElementById("minutes").value;
-            currentMinute = parseInt(minuteValue);
+            currentSecond = parseInt(document.getElementById("seconds").value);
+            currentMinute = parseInt(document.getElementById("minutes").value);
             if (isNaN(currentSecond) || currentSecond < 0 || isNaN(currentMinute) || currentMinute < 0) {
                 alert("Vui lòng nhập giá trị hợp lệ");
                 currentSecond = 0;
-                currentMinute = 0
+                currentMinute = 0 
                 return;
             }
+            totalSeconds = currentMinute * 60 +currentSecond;
             runCountdown();
         }
         function runCountdown() {
@@ -94,7 +187,9 @@
                 currentSecond--;
             }
             timeout = setTimeout(runCountdown, 1000);
-            totalSeconds = min * 60 + sec;
+            let currentTotalSecond = currentMinute * 60 + currentSecond;
+            let progressPercent = ((totalSeconds - currentTotalSecond) / totalSeconds) * 100;
+            progressBar.style.width = `${progressPercent}%`;
         }
         function cancel() {
             clearTimeout(timeout);
@@ -104,11 +199,9 @@
             document.getElementById("countdownDisplay").textContent = currentMinute + "phút" + ":" + currentSecond + " giây";
         }
     </script>
-
 </body>
-
 </html>
-
+-->
 <!--
 <!DOCTYPE html>
 <html lang="en">
