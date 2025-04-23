@@ -1,99 +1,357 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 30px;
+      text-align: center;
+    }
 
-        input {
-            width: 80px;
-            margin-right: 10px;
-            padding: 5px;
-        }
+    .quiz-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+    }
 
-        .progress-container {
-            width: 100%;
-            background-color: #ccc;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
+    #question {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
 
-        .progress-bar {
-            height: 20px;
-            width: 0%;
-            background-color: green;
-            border-radius: 5px;
-            transition: width 0.5s;
-        }
+    #answers button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      background-color: #ccc;
+    }
 
-        .status {
-            margin-top: 5px;
-            font-weight: bold;
-            color: #ddd;
-        }
-    </style>
+    #Clock {
+      font-size: 24px;
+      color: blue;
+      margin-bottom: 10px;
+    }
+
+    #progress-container {
+      width: 100%;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: green;
+    }
+
+    #result {
+      font-size: 20px;
+      font-weight: bold;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="quiz-container">
+    <h2> Quiz Game </h2>
+    <div id="Clock">00:10</div>
+    <div id="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="question"></div>
+    <div id="answers"></div>
+    <div id="result"></div>
+  </div>
 
+  <script>
+    const questions = [
+      {
+        question: "Một nửa của một phần tư của 8000 là bao nhiêu?",
+        answers: ["500", "1000", "2000", "800"],
+        correct: 1
+      },
+      {
+        question: "Trong bốn nước Canada, Nga, Mexico và Mỹ, đây là bản đồ của quốc gia nào?",
+        answers: ["CANADA", "RUSSIA", "MEXICO", "USA"],
+        correct: 3
+      },
+      {
+        question: "Hãy trả lời câu hỏi bằng tiếng Anh Finger is to hand as leaf to?",
+        answers: ["TWIG", "BRANCH", "TREE", "BLOSSOM"],
+        correct: 0
+      },
+      {
+        question: "20% của 30 USD là bao nhiêu?",
+        answers: ["5 DOLLARS", "6 DOLLARS", "4 DOLLARS", "8 DOLLARS"],
+        correct: 1
+      },
+      {
+        question: "JSON viết tắt của?",
+        answers: ["10", "11", "20", "21"],
+        correct: 2
+      }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let timer;
+    let totalTime = 10;
+    let remaining = 10;
+    const quest = document.getElementById("question");
+    const answ = document.getElementById("answers");
+    const Clo = document.getElementById("Clock");
+    const progressBar = document.getElementById("progress-bar");
+    const resu = document.getElementById("result");
+
+    function startQuiz() {
+      currentIndex = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      clearTimeout(timer);
+      remaining = totalTime;
+      updateClock();
+      updateProgressBar();
+      const q = questions[currentIndex];
+      quest.textContent = q.question;
+      answ.innerText = "";
+      q.answers.forEach((ans, index) => {
+        const div = document.createElement("div");
+        div.textContent = ans;
+        div.onclick = () => selectAnswer(index);
+        answ.appendChild(div);
+      });
+
+      runCountdown();
+    }
+
+    function runCountdown() {
+      if (remaining <= 0) {
+        goNext();
+        return;
+      }
+      updateClock();
+      updateProgressBar();
+      remaining--;
+      timer = setTimeout(runCountdown, 1000);
+    }
+
+    function updateClock() {
+      const sec = remaining.toString().padStart(2, "0");
+      Clock.textContent = `00:${sec}`;
+    }
+
+    function updateProgressBar() {
+      const percent = ((totalTime - remaining) / totalTime) * 100;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function selectAnswer(index) {
+      clearTimeout(timer);
+      if (index === questions[currentIndex].correct) {
+        score++;
+      }
+      goNext();
+    }
+
+    function goNext() {
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      quest.textContent = "Hoàn thành!";
+      answ.innerHTML = "";
+      progressBar.style.width = "100%";
+      resu.innerHTML = `Bạn trả lời đúng ${score} / ${questions.length} câu.`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+
+</html>
+
+<!--
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Multi Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+      }
+
+      input {
+        width: 80px;
+        margin-right: 10px;
+        padding: 5px;
+      }
+
+      button {
+        padding: 5px 10px;
+        margin-right: 5px;
+      }
+
+      .timer {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .progress-container {
+        width: 100%;
+        background-color: #ccc;
+        margin-top: 10px;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 20px;
+        width: 0%;
+        background-color: green;
+        transition: width 0.5s;
+      }
+
+      .status {
+        margin-top: 5px;
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
+  </head>
+
+  <body>
     <h2>🕒 Tạo Bộ Đếm</h2>
-    <input type="text" id="timer-name" placeholder="Tên timer">
-    <input type="number" id="minutes" placeholder="Phút" min="0">
-    <input type="number" id="seconds" placeholder="Giây" min="0" max="59">
+    <input type="text" id="timerName" placeholder="Tên timer" required />
+    <input type="number" id="minutes" placeholder="Phút" min="0" required />
+    <input
+      type="number"
+      id="seconds"
+      placeholder="Giây"
+      min="0"
+      max="59"
+      required
+    />
     <button onclick="createTimer()">Tạo Timer</button>
 
     <div id="timers-container"></div>
 
-    <audio id="alarmSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+    <audio
+      id="alarmSound"
+      src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"
+      preload="auto"
+    ></audio>
 
     <script>
-        const mang = [];
-        function start() {
-            const totalSeconds = minutes * 60 + seconds;
-            const newTimer = {
-                name,
-                totalSeconds,
-                remainingSeconds: totalSeconds,
-                status: 'Đang đếm',
-            };
-            mang.push(newTimer);
-            startTimer(newTimer);
-        }
+      let timers = [];
+      // Bỏ hàm start đi vì k cần thết, viết gộp hàm vô cho gọn cũng được
+      function createTimer() {
+        const name = document.getElementById("timerName").value.trim();
+        const minutes = parseInt(document.getElementById("minutes").value);
+        const seconds = parseInt(document.getElementById("seconds").value);
+        const totalSeconds = minutes * 60 + seconds;
 
-        function createTimer() {
-            const name = document.getElementById("timer-name").value;
-            const mins = parseInt(document.getElementById("minutes").value);
-            const secs = parseInt(document.getElementById("seconds").value);
-            if (isNaN(minutes) || isNaN(seconds) || minutes < 0 || seconds < 0 || seconds > 59) {
-                alert("Vui lòng nhập thời gian hợp lệ.");
-                return;
-            }
+        if (!name || isNaN(minutes) || isNaN(seconds) || totalSeconds <= 0) {
+          alert("Vui lòng nhập tên và thời gian hợp lệ.");
+          return;
         }
+        console.log("timer.length", timers.length);
+        // Đoạn bựa a nói em dùng index đây
 
-        function startTimer(Timer) {
-            Timer.timeout = setTimeout(() => {
-                if (Timer.status !== 'Đang đếm') return;
-                if (Timer.remainingSeconds <= 0) {
-                    clearTimeout(Timer.timeout);
-                    Timer.status = 'Đã hết';
-                    document.getElementById('alarmSound').play();
-                    alert(`⏰ ${Timer.name} đã hết giờ!`);
-                    return;
-                }
-                Timer.remainingSeconds--;
-            }, 1000);
+        const timer = {
+          id: timers.length, // Ở đây em dùng cái chi cũng được, có thể dùng date.now để get time
+          // lúc tạo vì hn chỉ có 1. Duy nhất 1 điều là làm răng để id chỉ là tồn tại duy nhất là được
+          name,
+          totalSeconds,
+          remainingSeconds: totalSeconds,
+          status: "Đang đếm",
+        };
+
+        timers.push(timer);
+        renderTimers();
+        startTimer(timer);
+        // Reset form
+        document.getElementById("timerName").value = "";
+        document.getElementById("minutes").value = "";
+        document.getElementById("seconds").value = "";
+      }
+
+      function renderTimers() {
+        const container = document.getElementById("timers-container");
+        container.innerHTML = "";
+
+        timers.forEach((timer) => {
+          const percent =
+            ((timer.totalSeconds - timer.remainingSeconds) /
+              timer.totalSeconds) *
+            100;
+
+          // Là 1 cách append cả khung dữ liệu, hoặc em viết như cái process cũng được, có nhiều cách viết
+          const div = document.createElement("div");
+          div.className = "timer";
+          div.innerHTML = `
+            <h3>${timer.name}</h3>
+            <div class="progress-container">
+              <div class="progress-bar" style="width:${percent}%;"></div>
+            </div>
+            <p>Còn lại: ${formatTime(timer.remainingSeconds)}</p>
+            <p class="status">${timer.status}</p>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s.toString().padStart(2, "0")}`;
+      }
+
+      function startTimer(timer) {
+        function tick() {
+          if (timer.status !== "Đang đếm") return;
+          if (timer.remainingSeconds > 0) {
+            timer.remainingSeconds--;
+          } else {
+            timer.status = "Đã hết";
+            document.getElementById("alarmSound").play();
+            alert(`${timer.name} Đến giờ rồi!`);
+            clearInterval(timer.interval);
+          }
+          renderTimers();
         }
+        timer.interval = setInterval(tick, 1000);
+      }
     </script>
-</body>
+  </body>
 </html>
+-->
 
 <!--
 <!DOCTYPE html>
