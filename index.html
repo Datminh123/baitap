@@ -3,6 +3,104 @@
 
 <head>
   <meta charset="UTF-8" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: black;
+      text-align: center;
+    }
+
+    h1 {
+      color: orange;
+    }
+
+    input,
+    button {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-left: 10px;
+    }
+
+    #weatherContainer {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .weather-box {
+      width: 250px;
+      padding: 15px;
+      background: orange;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Weather App</h1>
+  <input type="text" id="cityInput" placeholder="Nhập tên thành phố" />
+  <button onclick="getWeather()">Xem thời tiết</button>
+
+  <div id="weatherContainer"></div>
+
+  <script>
+    const apiKey = 'a0af88c9d0e91f4d8f983a807a1c15dd';
+
+    async function getWeather() {
+      const city = document.getElementById('cityInput').value;
+      const container = document.getElementById('weatherContainer');
+
+      if (!city) {
+        alert('Vui lòng nhập tên thành phố!');
+        return;
+      }
+
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Không tìm thấy thành phố!');
+        }
+
+        const data = await response.json();
+        const name = data.name;
+        const temp = data.main.temp;
+        const description = data.weather[0].description;
+
+        const weatherBox = document.createElement('div');
+        weatherBox.className = 'weather-box';
+        weatherBox.innerHTML = `
+          <h2>${name}</h2>
+          <p>Nhiệt độ: ${temp} °C</p>
+          <p>Thời tiết: ${description}</p>
+        `;
+
+        container.prepend(weatherBox);
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  </script>
+</body>
+
+</html>
+
+
+<!--
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
   <style>
@@ -190,7 +288,7 @@
 </body>
 
 </html>
-
+-->
 <!--
 <!DOCTYPE html>
 <html lang="vi">
